@@ -1,25 +1,26 @@
 version: 0.2
 
+env:
+  variables:
+    ECR_REPO: "073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo"
+
 phases:
   pre_build:
     commands:
       - echo Logging into Amazon ECR...
-      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 073651099432.dkr.ecr.ap-south-1.amazonaws.com
-
+      - aws --version
+      - $(aws ecr get-login --no-include-email --region ap-south-1)
   build:
     commands:
-      - echo Building Docker image...
-      - docker build -t nodejs-eks-app ./nodejs-eks-app
-      - docker tag nodejs-eks-app:latest 073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest
-
+      - echo Build started on `date`
+      - docker build -t nodejs-eks-app .
+      - docker tag nodejs-eks-app:latest $ECR_REPO:latest
   post_build:
     commands:
-      - echo Pushing Docker image...
-      - docker push 073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest
+      - echo Pushing the Docker image...
+      - docker push $ECR_REPO:latest
       - echo Writing imagedefinitions.json...
-      - printf '[{"name":"nodejs","imageUri":"%s"}]' 073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest > imagedefinitions.json
-      - cat imagedefinitions.json
-
+      - printf '[{"name":"nodejs","imageUri":"%s"}]' $ECR_REPO:latest > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
