@@ -3,20 +3,23 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
+      - echo Logging into Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 073651099432.dkr.ecr.ap-south-1.amazonaws.com
+
   build:
     commands:
-      - echo Build started on `date`
-      - docker build -t nodejs-eks-app .
+      - echo Building Docker image...
+      - docker build -t nodejs-eks-app ./nodejs-eks-app
       - docker tag nodejs-eks-app:latest 073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest
+
   post_build:
     commands:
-      - echo Pushing image to ECR...
+      - echo Pushing Docker image...
       - docker push 073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest
       - echo Writing imagedefinitions.json...
       - printf '[{"name":"nodejs","imageUri":"%s"}]' 073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest > imagedefinitions.json
       - cat imagedefinitions.json
+
 artifacts:
   files:
-    - eks-nodejs-bucket/imagedefinitions.json
+    - imagedefinitions.json
