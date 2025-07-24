@@ -7,9 +7,9 @@ env:
 phases:
   pre_build:
     commands:
-      - echo Logging into Amazon ECR...
+      - echo Logging in to Amazon ECR...
       - aws --version
-      - $(aws ecr get-login --no-include-email --region ap-south-1)
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REPO
   build:
     commands:
       - echo Build started on `date`
@@ -24,3 +24,4 @@ phases:
 artifacts:
   files:
     - imagedefinitions.json
+
