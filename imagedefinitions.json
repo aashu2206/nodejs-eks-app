@@ -1,6 +1,0 @@
-[
-  {
-    "name": "nodejs",
-    "imageUri": "073651099432.dkr.ecr.ap-south-1.amazonaws.com/eks-repo:latest"
-  }
-]
