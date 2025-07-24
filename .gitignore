@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
+# Docker
+*.log
+.dockerignore
+docker-compose.override.yml
+
+# AWS
+imagedefinitions.json
+certs/key.pem
+certs/cert.pem
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VS Code/IDE
+.vscode/
+.idea/
+*.swp
+
+# OS/Editor temp files
+*~
+*.tmp
+*.bak
+
+# Build artifacts
+dist/
+build/
